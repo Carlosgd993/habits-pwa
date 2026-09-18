@@ -25,3 +25,6 @@ dist-ssr
 
 # Vite PWA
 dev-dist
+
+.vercel
+.env*
