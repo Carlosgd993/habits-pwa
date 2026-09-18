@@ -9,7 +9,19 @@
     <title>Hábitos</title>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- React borra esto al montar. Si sigue visible, la app no ha arrancado
+         -- casi siempre por falta de las VITE_SUPABASE_* en el build. -->
+    <div id="root">
+      <div style="color: #94a3b8; font: 16px system-ui; padding: 24px; max-width: 32rem; margin: 0 auto">
+        <p>La aplicación no ha arrancado.</p>
+        <p>
+          Lo normal es que falten las variables <code>VITE_SUPABASE_URL</code> y
+          <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> en el entorno de build, o que
+          el despliegue se haya construido antes de añadirlas. Mira la consola del
+          navegador para el error exacto.
+        </p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
