@@ -94,6 +94,26 @@ Se cambia con `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` en
 hay conmutador en la interfaz: es una variable de build, igual que el
 `SUPABASE_ENV` del daemon.
 
+**Solo cuentan las dos variables `VITE_`, y solo si existían al construir.**
+Dos trampas que ya costaron un rato:
+
+- **La integración Vercel↔Supabase no sirve para esto.** Crea 16 variables
+  (`SUPABASE_URL`, `POSTGRES_*`, `NEXT_PUBLIC_*`…) y **ninguna lleva el prefijo
+  `VITE_`**, que es lo único que Vite expone al navegador. Con ellas puestas y
+  sin las `VITE_`, la app despliega bien y se queda en blanco. Las secretas que
+  traía (`SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_SECRET_KEY`,
+  `SUPABASE_JWT_SECRET`) se borraron por no usarlas: si alguna vuelve, **nunca**
+  debe renombrarse con prefijo `VITE_`, porque se saltan el RLS y acabarían en
+  el JavaScript público.
+- **Vite incrusta las variables al construir, no al servir.** Añadirlas no
+  arregla un despliegue ya hecho: hay que volver a desplegar. Y "Redeploy" sobre
+  un deployment antiguo reconstruye *ese* commit, no el último de `main`.
+
+Proyecto de Vercel: `habits`, equipo `habits7`, producción en
+`https://habits-phi-lemon.vercel.app`. Desde este directorio, con el CLI y sesión
+iniciada: `vercel env ls` para ver las variables y `vercel deploy --prod` para
+desplegar el código de trabajo actual.
+
 Auth está configurado en cada proyecto por separado: proveedor Email, un único
 usuario, registro cerrado. La URL desplegada tiene que estar en
 **Authentication → URL Configuration** del proyecto, o el login redirige mal.
